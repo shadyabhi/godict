@@ -45,7 +45,7 @@ if means is not None:
         defs.replace("<em>", bold).replace("</em>", reset)
         print "\t", sanitize(defs)
 else:
-    print "Word not found. These are he suggestions"
+    print "Word not found. Suggestions"
     data = """
     <spellrequest textalreadyclipped="0" ignoredups="0" ignoredigits="1" ignoreallcaps="1">
     <text> %s </text>
@@ -62,4 +62,4 @@ else:
 
     for child_node in dom_data.childNodes:
         result = child_node.firstChild.data.split()
-        print sanitize(result)
+        print result
