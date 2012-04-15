@@ -3,6 +3,23 @@
 import gtk
 import define
 import pango
+from HTMLParser import HTMLParser
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+
+def sanitize(text):
+    #text = text.replace("<em>", bold).replace("</em>", reset)
+    text = text.replace("<em>", "").replace("</em>", "")
+    text = text.replace("<b>", "").replace("</b>", "")
+    text = HTMLParser.unescape.__func__(HTMLParser, text)
+    return text
+
 
 class GDiction:
     def __init__(self):
@@ -67,11 +84,11 @@ class GDiction:
                 text_buffer.insert_with_tags(position, "\n---------------")
                 for index, m in enumerate(meanings):
                     position = text_buffer.get_end_iter()
-                    text_buffer.insert_with_tags(position, "\n" + str(index+1) + ".\t"+m[0], color1_tag)
+                    text_buffer.insert_with_tags(position, "\n" + str(index+1) + ".\t"+ sanitize(m[0]), color1_tag)
                     try:
                         for index, e in enumerate(m[1]): 
                             position = text_buffer.get_end_iter()
-                            text_buffer.insert_with_tags(position, "\n" + "\t\t" + str(index + 1) + ". "  + e, ex_tag, color2_tag)
+                            text_buffer.insert_with_tags(position, "\n" + "\t\t" + str(index + 1) + ". "  + sanitize(e), ex_tag, color2_tag)
                     except: pass
             
             position = text_buffer.get_end_iter()
@@ -79,7 +96,7 @@ class GDiction:
             text_buffer.insert_with_tags(text_buffer.get_end_iter(), "\n---------------")
             for index, defs in enumerate(means['webDefinitions']):
                 position = text_buffer.get_end_iter()
-                text_buffer.insert_with_tags(position, "\n" + str(index+1) + ".\t" + defs + "\n", color1_tag)
+                text_buffer.insert_with_tags(position, "\n" + str(index+1) + ".\t" + sanitize(defs) + "\n", color1_tag)
             
     def set_meaning_in_textview(self):
         clip = gtk.Clipboard(display=gtk.gdk.display_get_default(), selection="PRIMARY")
