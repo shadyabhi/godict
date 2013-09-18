@@ -1,4 +1,5 @@
-#!/usr/bin/python2
+#!/usr/bin/env python2
+# encoding: utf-8
 
 import define
 import sys
@@ -57,7 +58,10 @@ else:
     con.request("POST", "/tbproxy/spell?lang=en", data % word_to_spell)
     response = con.getresponse()
 
-    dom = xml.dom.minidom.parseString(response.read())
+    try:
+        dom = xml.dom.minidom.parseString(response.read())
+    except xml.parsers.expat.ExpatError:
+        sys.exit()
     dom_data = dom.getElementsByTagName('spellresult')[0]
 
     for child_node in dom_data.childNodes:
